@@ -1,11 +1,11 @@
 # LearnSL 1.0.0
 
-- New `decission_tree()` function to create a perfect decission tree based on a set of observations and (if selected) see the step-by-step procedure;
+- New `decission_tree()` function to create a perfect decision tree based on a set of observations and (if selected) see the step-by-step procedure;
 - New `multivariate_linear_regression()` function to generate linear equation lines that approximate the values on a set of observations and (if selected) see the step-by-step procedure;
 - New `polynomial_regression()` function to generate polynomial equation lines that approximate the values on a set of observations to selected degree and (if selected) see the step-by-step procedure;
 - New `perceptron()` function to calculate the weights of a perceptron and predict values on a set of observations and (if selected) see the step-by-step procedure;
 - New `knn()` function to perform k-nearest neighbors classification on a set of observations and (if selected) see the step-by-step procedure;
-- New `db1rl` data.frame with 20 observations (4 features). Values form different types of lines (linear, exponential, logaritmic, sine)
+- New `db1rl` data.frame with 20 observations (4 features). Values form different types of lines (linear, exponential, logarithmic, sine)
 - New `db_per_and` data.frame with 8 observations (2 features). "AND" logic gate.
 - New `db_per_or` data.frame with 8 observations (2 features). "OR" logic gate.
 - New `db_per_xor` data.frame with 8 observations (2 features). "XOR" logic gate.

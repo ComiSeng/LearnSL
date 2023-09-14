@@ -1,6 +1,6 @@
 #' @title K-Nearest Neighbors
 #'
-#' @description This function applies knn algorith to clasify data.
+#' @description This function applies knn algorithm to classify data.
 #'
 #' @param data Data frame with already classified observations. Each
 #' column represents a parameter of the values. The last column contains the
@@ -8,14 +8,14 @@
 #' inputs. Each row is a different observation.
 #' @param ClassLabel String containing the name of the column of the classes we want to classify
 #' @param p1 Vector containing the parameters of the new value that we want to
-#' clasify.
+#' classify.
 #' @param d_method String with the name of the distance method that will
 #' be used. It must be one of \code{"Euclidean"}, \code{"Manhattan"},
 #' \code{"Cosine"}, \code{"Chebyshev"}, \code{"Minkowski"}, \code{"Canberra"},
 #' \code{"Octile"}, \code{"Hamming"}, \code{"Binary"}or \code{"Jaccard"}. Where
 #' both \code{"Hamming"} and \code{"Binary"} use the same method, as it is known
 #' by both names.
-#' @param k Number of closest values that will be considered in order to clasify
+#' @param k Number of closest values that will be considered in order to classify
 #' the new value ("p1").
 #' @param p Exponent used in the \code{Minkowski distance}. 3 by default,
 #' otherwise if specified.

@@ -24,7 +24,7 @@ inputs. Each row is a different observation.}
 \item{ClassLabel}{String containing the name of the column of the classes we want to classify}
 
 \item{p1}{Vector containing the parameters of the new value that we want to
-clasify.}
+classify.}
 
 \item{d_method}{String with the name of the distance method that will
 be used. It must be one of \code{"Euclidean"}, \code{"Manhattan"},
@@ -33,7 +33,7 @@ be used. It must be one of \code{"Euclidean"}, \code{"Manhattan"},
 both \code{"Hamming"} and \code{"Binary"} use the same method, as it is known
 by both names.}
 
-\item{k}{Number of closest values that will be considered in order to clasify
+\item{k}{Number of closest values that will be considered in order to classify
 the new value ("p1").}
 
 \item{p}{Exponent used in the \code{Minkowski distance}. 3 by default,
@@ -49,7 +49,7 @@ and explanations are printed along the code}
 Value of the new classified example.
 }
 \description{
-This function applies knn algorith to clasify data.
+This function applies knn algorithm to classify data.
 }
 \examples{
 # example code
