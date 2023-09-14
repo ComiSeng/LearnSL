@@ -24,7 +24,7 @@
 #' @keywords knn, supervised classification, K-Nearest Neighbors, distance.
 #'
 #' @importFrom graphics pairs
-#'
+#' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}
 #' @export
 knn <- function(data, p1, d_method = "euclidean", k, p = 3) {
   dist <- apply(

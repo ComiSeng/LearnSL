@@ -20,29 +20,32 @@
 #'
 #' @importFrom stats coef lm predict
 #' @importFrom graphics lines
-#'
+#' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}
 #' @export
-polynomial_regression <- function(data, degree, details) {
+polynomial_regression <- function(data, degree, details, waiting) {
   par(mfrow = c(1, 1))
 
   num_columns <- ncol(data)
-
-  # Create an empty plot
-  cat("Press the 'n' key and then press Enter to continue along the code: \n")
-  cat("An empty plot is made with appropiate limits\n")
 
   plot(1, type = "n", xlim = range(data[, num_columns]),
        ylim = range(data[, 1:(num_columns - 1)]),
        main = "Polynomial Regression",
        xlab = colnames(data)[num_columns],
        ylab = "Variables")
-  n_espera(details)
 
+  # Create an empty plot
+  if (details){
+    cat("An empty plot is made with appropiate limits\n")
+    if (waiting){
+      invisible(readline(prompt = "Press [enter] to continue"))
+      console.log("")
+    }
+  }
   # Initialize empty vectors for legends
   legend_labels <- character((num_columns - 1))
   legend_colors <- integer((num_columns - 1))
 
-  cat("The aproximations of the following equations to the provided values are done adjusting the coefficients of the line to make it the best-fit possible.\n")
+  console.log("The aproximations of the following equations to the provided values are done adjusting the coefficients of the line to make it the best-fit possible.\n")
   # Iterate through each column (except the last one) as the independent variable
   for (i in 1:(num_columns - 1)) {
     independent_var <- data[, i]
@@ -73,18 +76,23 @@ polynomial_regression <- function(data, degree, details) {
       equation <- paste(equation, ifelse(poly_coefs[d] >= 0, "+", "-"), abs(round(poly_coefs[d], 3)), "x^", (d - 1), sep = "")
     }
 
-    cat("The Equation ( degree",degree,") aproximation to the",colnames(data)[i],"values is:",equation,
-        "\n")
-
     legend_labels[i] <- paste(colnames(data)[i], ":", equation)
     legend_colors[i] <- i
 
     # Create the legend
     legend("topleft", legend = legend_labels, col = legend_colors,
            pch = 1, lty = 1, bty = 'n', xjust = 1, cex = 0.8)
-    if (i != num_columns - 1){
-      n_espera(details)
+    if (details){
+      console.log(paste("The Equation ( degree",degree,") aproximation to the"
+                      ,colnames(data)[i],"values is:",equation,"\n"))
+      if (i != num_columns - 1){
+        if (waiting){
+          invisible(readline(prompt = "Press [enter] to continue"))
+          console.log("")
+        }
+      }
     }
+
   }
   par(mfrow = c(1, 1))
 }

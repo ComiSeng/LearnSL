@@ -10,51 +10,96 @@
 #'
 #' @return mete los ejemplos perrrrrooooooo @@examples
 #' @keywords hola
-#' @author Víctor Amador Padilla, \email{vamadorpadilla@@edu.uah.es}
+#' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}
 #' @export
-perceptron <- function(training_data, to_clasify, activation_method, max_iter, learning_rate){
-  weigths <- per_training( training_data, activation_method, max_iter, learning_rate )
+perceptron <- function(training_data, to_clasify, activation_method, max_iter, learning_rate, details = FALSE, waiting = TRUE){
+  if(details){
+    console.log("\nEXPLANATION")
+    hline()
+    hline()
+    console.log("\nStep 1:")
+    console.log("    • Generate a random weigth for each variable.")
+    console.log("Step 2:")
+    console.log("    • Check if the weigths classify correctly. If they do, go to step 4")
+    console.log("Step 3:")
+    console.log("    • Recalculate weigths based on the error between the expected output and the real output.")
+    console.log("    • If max_iter is reached go to step 4. If not, go to step 2.")
+    console.log("Step 4:")
+    console.log("    • Return the weigths and use them to classigy the new value\n")
+    hline()
+    hline()
+  }
+  weigths <- per_training( training_data, activation_method, max_iter, learning_rate, details, waiting)
   clasificacion <- as.numeric(act_method(activation_method,sum(weigths * to_clasify)) > 0.5)
-  cat("Classification of the new value:", clasificacion, "\n")
+  if (details){
+    hline()
+    console.log("\nStep 4:\n")
+  }
+  console.log(paste("Predicted value:", clasificacion, "\n"))
+  if (details){
+    console.log("Final weigths:")
+    print(weigths)
+  }
 }
 
 #' @importFrom stats runif
-per_training <- function(training_data, activation_method, max_iter, learning_rate){
-  weigths <- runif(ncol(training_data)-1, min = -1, max = 1)
-  is_correct <- FALSE
+per_training <- function(training_data, activation_method, max_iter, learning_rate, details, waiting){
+  env <- new.env()
+  env$weigths <- runif(ncol(training_data)-1, min = -1, max = 1)
+  if (details){
+    console.log("\nStep 1:")
+    console.log(paste("Random weigths between -1 and 1 are generated for each variable:"))
+    print(env$weigths)
+    if (waiting){
+      invisible(readline(prompt = "Press [enter] to continue"))
+      console.log("")
+    }
+    hline()
+    console.log("\nSteps 2 and 3:")
+  }
+  env$is_correct <- FALSE
   sapply(
     1:max_iter,
     function(a){
-      if (!is_correct){# If every element is classified, we are done
-        is_correct <- TRUE
+      if (!env$is_correct){# If every element is classified, we are done
+        env$is_correct <- TRUE
         # Verify if every value is correctly classified
         apply(
           training_data,
           1,
           function(b){
-            if (is_correct){
+            if (env$is_correct){
               inputs <- b[1:length(b)-1]
               expected_output <- b[length(b)]
-              output <- act_method(activation_method,sum(weigths * inputs))
-              if (as.numeric(output > 0.5) != expected_output) {is_correct <- FALSE}
+              output <- act_method(activation_method,sum(env$weigths * inputs))
+              if (as.numeric(output > 0.5) != expected_output) {env$is_correct <- FALSE}
             }
           }
         )
-        if (!is_correct){
+        if (!env$is_correct){
           # select a random value from training_data
           row_num <- sample(1:nrow(training_data), 1)
           inputs <- training_data[row_num, 1:ncol(training_data)-1]
           expected_output <- training_data[row_num, ncol(training_data)]
 
           # calculate output and update weights
-          output <- act_method(activation_method,sum(weigths * inputs))
+          output <- act_method(activation_method,sum(env$weigths * inputs))
           error <- expected_output - output
-          weigths <- weigths + learning_rate * error * inputs
+          env$weigths <- env$weigths + learning_rate * error * inputs
+          if(details){
+            console.log("Weigths do not classify correctly so they get adjusted:")
+            print(env$weigths)
+            if(waiting){
+              invisible(readline(prompt = "Press [enter] to continue"))
+              console.log("")
+            }
+          }
         }
       }
     }
   )
-  return(weigths)
+  console.log("")
+  return(env$weigths)
 }
 
 #'@title act_method
@@ -70,7 +115,6 @@ per_training <- function(training_data, activation_method, max_iter, learning_ra
 #'@return Value after applying the activation method.
 #'
 #'@keywords internal
-#'
 act_method <- function(method, x){
   switch (tolower(method),
           "step"     = as.numeric(x > 0.5),

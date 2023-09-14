@@ -29,7 +29,7 @@
 #' }
 #' @author Víctor Amador Padilla
 #' @keywords decision rules, supervised classification, learning, information gain
-#'
+#' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}
 #' @export
 decision_tree <- function (data, classy, m, method = "entropy"){
   tree_strctr <- list(list(0))

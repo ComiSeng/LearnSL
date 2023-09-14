@@ -1,14 +1,3 @@
-n_espera <- function(details){
-  if (details){
-    n_pressed <- FALSE
-    while (!n_pressed) {
-      response <- readline(prompt = "")
-      if (tolower(response) == "n") {
-        n_pressed <- TRUE
-      }
-    }
-  }
-}
 
 #' @importFrom cli console_width
 console.log <- function(txt, ...) {
