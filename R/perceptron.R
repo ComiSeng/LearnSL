@@ -1,15 +1,43 @@
 #' @title Perceptron
 #'
-#' @description Applies k-nn algorithm to classify data.
+#' @description Binary classification algorithm that learns to separate
+#'  two classes of data points by finding an optimal
+#'  decision boundary (hyper plane) in the feature space.
 #'
-#' @param training_data hola
-#' @param to_clasify hola
-#' @param activation_method hola
-#' @param max_iter hola
-#' @param learning_rate hola
+#' @param training_data Data frame with already classified observations. Each
+#' column represents a parameter of the values. The last column contains the
+#' output, this means, the expected output when the other column values are
+#' inputs. Each row is a different observation. It works as training data
+#' @param to_clasify Vector containing the parameters of the new value that we want to
+#' classify.
+#' @param activation_method Activation function to be used. It must be one of
+#' \code{"step"}, \code{"sine"}, \code{"tangent"}, \code{"linear"}, \code{"relu"},
+#' \code{"gelu"} or \code{"swish"}.
+#' @param max_iter Maximum epoch during the training phase.
+#' @param learning_rate Value at which the perceptron will learn from previous epochs mistakes.
+#' @param details Boolean value. If it is set to "TRUE" multiple clarifications
+#' and explanations are printed along the code
+#' @param waiting If TRUE while \code{details} = TRUE. The code will stop in each
+#' "block" of code and wait for the user to press "enter" to continue.
 #'
-#' @return mete los ejemplos perrrrrooooooo @@examples
-#' @keywords hola
+#' @return numeric value with the predicted class of the new value.
+#'
+#' @details Functioning:
+#'
+#' \describe{
+#'  * \emph{Step 1}: Generate a random weight for each independent variable.
+#'  * \emph{Step 2}: Check if the weights classify correctly. If they do, go to step 4
+#'  * \emph{Step 3}: Adjust weights based on the error between the expected output and the real output.
+#'  If max_iter is reached go to step 4. If not, go to step 2.
+#'  * \emph{Step 4}: Return the weights and use them to classify the new value
+#' }
+#'
+#' @examples
+#' # example code
+#' perceptron(db_per_or, c(1, 1, 1), "gelu", 1000, 0.1)
+#' perceptron(db_per_and, c(0,0,1), "swish", 1000, 0.1, TRUE, FALSE)
+#'
+#' @keywords perceptron, neural networks, supervised learning, activation function
 #' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}
 #' @export
 perceptron <- function(training_data, to_clasify, activation_method, max_iter, learning_rate, details = FALSE, waiting = TRUE){
@@ -18,16 +46,20 @@ perceptron <- function(training_data, to_clasify, activation_method, max_iter, l
     hline()
     hline()
     console.log("\nStep 1:")
-    console.log("    • Generate a random weigth for each variable.")
+    console.log("    - Generate a random weight for each variable.")
     console.log("Step 2:")
-    console.log("    • Check if the weigths classify correctly. If they do, go to step 4")
+    console.log("    - Check if the weight classify correctly. If they do, go to step 4")
     console.log("Step 3:")
-    console.log("    • Recalculate weigths based on the error between the expected output and the real output.")
-    console.log("    • If max_iter is reached go to step 4. If not, go to step 2.")
+    console.log("    - Adjust weights based on the error between the expected output and the real output.")
+    console.log("    - If max_iter is reached go to step 4. If not, go to step 2.")
     console.log("Step 4:")
-    console.log("    • Return the weigths and use them to classigy the new value\n")
+    console.log("    - Return the weigths and use them to classigy the new value\n")
     hline()
     hline()
+    if (waiting){
+      invisible(readline(prompt = "Press [enter] to continue"))
+      console.log("")
+    }
   }
   weigths <- per_training( training_data, activation_method, max_iter, learning_rate, details, waiting)
   clasificacion <- as.numeric(act_method(activation_method,sum(weigths * to_clasify)) > 0.5)
@@ -48,7 +80,7 @@ per_training <- function(training_data, activation_method, max_iter, learning_ra
   env$weigths <- runif(ncol(training_data)-1, min = -1, max = 1)
   if (details){
     console.log("\nStep 1:")
-    console.log(paste("Random weigths between -1 and 1 are generated for each variable:"))
+    console.log(paste("Random weights between -1 and 1 are generated for each variable:"))
     print(env$weigths)
     if (waiting){
       invisible(readline(prompt = "Press [enter] to continue"))
@@ -87,7 +119,7 @@ per_training <- function(training_data, activation_method, max_iter, learning_ra
           error <- expected_output - output
           env$weigths <- env$weigths + learning_rate * error * inputs
           if(details){
-            console.log("Weigths do not classify correctly so they get adjusted:")
+            console.log("Weights do not classify correctly so they get adjusted:")
             print(env$weigths)
             if(waiting){
               invisible(readline(prompt = "Press [enter] to continue"))
@@ -102,19 +134,7 @@ per_training <- function(training_data, activation_method, max_iter, learning_ra
   return(env$weigths)
 }
 
-#'@title act_method
-#'
-#'@description Sets the activation method the user wants to use.
-#'
-#'@param method String with the name of the activation method that will
-#'be used. It must be one of \code{"step"}, \code{"sine"},
-#'\code{"tangent"}, \code{"linear"}, \code{"relu"}, \code{"gelu"} or
-#'\code{"swish"}. Anything else will raise an error.
-#'@param x numeric on which the activation function will be applied. Typically, the sum of weighted weights.
-#'
-#'@return Value after applying the activation method.
-#'
-#'@keywords internal
+
 act_method <- function(method, x){
   switch (tolower(method),
           "step"     = as.numeric(x > 0.5),

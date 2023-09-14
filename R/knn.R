@@ -6,6 +6,7 @@
 #' column represents a parameter of the values. The last column contains the
 #' output, this means, the expected output when the other column values are
 #' inputs. Each row is a different observation.
+#' @param ClassLabel String containing the name of the column of the classes we want to classify
 #' @param p1 Vector containing the parameters of the new value that we want to
 #' clasify.
 #' @param d_method String with the name of the distance method that will
@@ -18,15 +19,45 @@
 #' the new value ("p1").
 #' @param p Exponent used in the \code{Minkowski distance}. 3 by default,
 #' otherwise if specified.
+#' @param details Boolean value. If it is set to "TRUE" multiple clarifications
+#' and explanations are printed along the code
+#' @param waiting If TRUE while \code{details} = TRUE. The code will stop in each
+#' "block" of code and wait for the user to press "enter" to continue.
 #'
 #' @return Value of the new classified example.
+#'
+#' @examples
+#' # example code
+#' knn(db_flowers,"ClassLabel", c(4.7, 1.2, 5.3, 2.1), "chebyshev", 4)
+#' knn(db_flowers,"ClassLabel", c(4.7, 1.5, 5.3, 2.1), "chebyshev", 5)
+#' knn(db_flowers,"ClassLabel", c(6.7, 1.5, 5.3, 2.1), "Euclidean", 2, TRUE, FALSE)
+#' knn(db_per_or,"y", c(1,1,1), "Hamming", 3, TRUE, TRUE)
 #'
 #' @keywords knn, supervised classification, K-Nearest Neighbors, distance.
 #'
 #' @importFrom graphics pairs
 #' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}
 #' @export
-knn <- function(data, p1, d_method = "euclidean", k, p = 3) {
+knn <- function(data,ClassLabel ,p1, d_method = "euclidean", k, p = 3, details = FALSE, waiting = TRUE) {
+  if(details){
+    console.log("\nEXPLANATION")
+    hline()
+    hline()
+    console.log("\nStep 1:")
+    console.log("    - Calculate the chosen d_method from the value we want to classify to every other one.")
+    console.log("Step 2:")
+    console.log("    - Select the k closest neighbors and get their classes.")
+    console.log("Step 3:")
+    console.log("    - Create a scatterplot matrix with the provided values for visualization purpose")
+    console.log("Step 4:")
+    console.log("    - Select the most repeated class among the k closest neighbors classes.\n")
+    if (waiting){
+      invisible(readline(prompt = "Press [enter] to continue"))
+      console.log("")
+    }
+    hline()
+    hline()
+  }
   dist <- apply(
     data[, 1:(length(data) - 1)],
     1,
@@ -35,10 +66,29 @@ knn <- function(data, p1, d_method = "euclidean", k, p = 3) {
     d_method = d_method,
     p = p
   )
-
+  if(details){
+    console.log("\nStep 1:")
+    console.log("\nDistance from p1 to every other p.")
+    print(dist)
+    if (waiting){
+      invisible(readline(prompt = "Press [enter] to continue"))
+      console.log("")
+    }
+  }
   neighbors <- sort(dist, index.return = TRUE)$ix[1:k] # k closest values position
 
   tags <- data[neighbors, length(data)] # class names in k values
+
+  if(details){
+    hline()
+    console.log("\nStep 2:")
+    console.log("\nThese are the first k values classes:")
+    print(tags)
+    if (waiting){
+      invisible(readline(prompt = "Press [enter] to continue"))
+      console.log("")
+    }
+  }
 
   my_string <- "New_Value"
   my_list <- list()
@@ -52,14 +102,31 @@ knn <- function(data, p1, d_method = "euclidean", k, p = 3) {
 
   # Create a scatterplot matrix with different colors for each class
   colors <- c("red", "blue", "green", "purple", "orange", "cyan", "magenta", "brown", "gray", "pink")
-  class_colors <- colors[match(data$ClassLabel, unique(data$ClassLabel))]
+  class_colors <- colors[match(data[[ClassLabel]], unique(data[[ClassLabel]]))]
 
   pairs(features, col = class_colors)
 
-  legend("topleft", legend = unique(data$ClassLabel), fill = colors, cex = 0.7, xpd = TRUE, ncol = 1)
-  clas <- table(tags)
 
+  legend("topleft", legend = unique(data[[ClassLabel]]), fill = colors, cex = 0.7, xpd = TRUE, ncol = 1)
+
+  clas <- table(tags)
+  if(details){
+    hline()
+    console.log("\nStep 3:")
+    console.log("\nPlot values.")
+    if (waiting){
+      invisible(readline(prompt = "Press [enter] to continue"))
+      console.log("")
+    }
+  }
   prediction <- names(clas)[clas == max(clas)][1] #most repeated class
+  if(details){
+    hline()
+    console.log("\nStep 4:")
+    console.log(paste("\nThe most represented class among the k closes neighbors is", prediction))
+    console.log("therefore, that is the new value's predicted class.")
+  }else{console.log(paste("p1 =", prediction))}
+  return (prediction)
 }
 
 distance_method <- function(p1, p2, d_method = "euclidean", p = 3){

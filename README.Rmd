@@ -1,0 +1,38 @@
+---
+output: github_document
+---
+
+# LearnSL
+
+The goal of LearnSL is to provide a set of functions to perform supervised classification along with comprehensive explanations of the algorithms, their pros and cons, and their applications.
+
+## Installation
+
+You can install the released version of LearnSL from [CRAN](https://cran.r-project.org/) with:
+
+``` r
+install.packages("LearnSL")
+```
+
+You can install the development version of LearnSL from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("ComiSeng/LearnSL")
+```
+
+## Example
+
+This is a basic example which shows you how to classify a dataset:
+
+```{r example_1}
+library(LearnSL)
+multivariate_linear_regression(db1rl)
+```
+
+This is yet another example of an implemented classification algorithm, showing the step by step process:
+
+```{r example_2}
+library(LearnSL)
+perceptron(db_per_and, c(0,0,1), "swish", 1000, 0.1, TRUE, FALSE)
+```

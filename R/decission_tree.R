@@ -1,9 +1,12 @@
 #' @title Decision Tree
 #'
-#' @description This function creates a set of rules needed to classify data,
+#' @description This function creates a decision tree based of an example dataset,
 #' calculating the best classifier possible in each step. Only creates perfect
 #' divisions, this means, if the rule doesn't create a classified group, it is
-#' not considered.
+#' not considered. It is specifically designed for categorical values. Continues values
+#' are not recommended as they will be treated as categorical ones.
+#'
+#' @details If \code{data} is not perfectly classifiable, the code will not finish.
 #'
 #' @param data A data frame with already classified observations. Each column
 #' represents a parameter of the value. Each row is a different observation.
@@ -17,46 +20,128 @@
 #' @param m Maximum numbers of child nodes each node can have.
 #' @param method The definition of Gain. It must be one of
 #' \code{"Entropy"}, \code{"Gini"}or \code{"Error"}.
-#' @return data frame with a list of steps used to classify the data with this
-#' columns:
-#' Classifier  Value   Classified
+#' @param details Boolean value. If it is set to "TRUE" multiple clarifications
+#' and explanations are printed along the code
+#' @param waiting If TRUE while \code{details} = TRUE. The code will stop in each
+#' "block" of code and wait for the user to press "enter" to continue.
 #'
-#' @details Available gain information methods are:
+#' @return nothing
+#'
+#' @details Available information gain methods are:
 #'
 #' \describe{
-#'  * \emph{Entropy}: The formula to calculate the information gain
-#'  works as follows: \deqn{p = -\sum{fi p\sub i * \log2 p\sub i}}
+#'  * \emph{Entropy}: The formula to calculate the entropy
+#'  works as follows: \deqn{p_{i} = -\sum{f_{i} p_{i} \cdot \log2 p_{i}}}
+#'  * \emph{Gini}: The formula to calculate gini
+#'  works as follows: \deqn{p_{i} = 1 -\sum{f_{i} p_{i}^{2}}}
+#'  * \emph{Error}: The formula to calculate error
+#'  works as follows: \deqn{p_{i} = 1 -\max{(f_{i} p_{i}})}
 #' }
-#' @author Víctor Amador Padilla
+#' Once the impurity is calculated, the information gain is calculated as follows:
+#' \deqn{IG = I_{father} - \sum{\frac{count(sonvalues)}{count(fathervalues)} \cdot I_{son}}}
+#'
+#' @examples
+#' # example code
+#' decision_tree(db3, "VehicleType", 5, "entropy", details = TRUE, waiting = FALSE)
+#' decision_tree(db2, "VehicleType", 4, "gini")
+#'
 #' @keywords decision rules, supervised classification, learning, information gain
 #' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}
 #' @export
-decision_tree <- function (data, classy, m, method = "entropy"){
-  tree_strctr <- list(list(0))
-  result <- aux_decision_tree(data,classy, m, method, tree_strctr, id = 0, id_f = 0, h = 0)
-  result <- result[2:length(result)]
-  for (i in 1:length(result)){
-    cat("En el nivel", i ,"hay", length(result[[i]]),"hijos, estos se han divido por la variable", result[[i]][[1]][[5]],":\n\n")
-    for (j in 1:length(result[[i]])){
-      cat("El hijo", result[[i]][[j]][[2]] ,"(con padre", result[[i]][[j]][[3]], ") filtra por \"", result[[i]][[j]][[6]], "\" y contiene los siguientes datos:\n")
-      print(result[[i]][[j]][[1]])
-      cat("\n")
+decision_tree <- function (data, classy, m, method = "entropy", details = FALSE, waiting = TRUE){
+
+  if(details){
+    console.log("\nEXPLANATION")
+    hline()
+    hline()
+    console.log("\nStep 0:")
+    console.log("    - Set the dataframe as parent node. The original dataframe is set as node 0.")
+    console.log("\nStep 1:")
+    console.log("    - If data is perfectly classified, go to step 4.")
+    console.log("    - If data is not classified, create all the possible combinations of values for each variable.")
+    console.log("      Each combination stablishs the division of the son nodes, being \"m\"")
+    console.log("      numbers of divisions performed.")
+    console.log("Step 2:")
+    console.log("    - Calculate the information gain for each combination.")
+    console.log("      The \"method\" method is used to calculate the information gain.")
+    console.log("Step 3:")
+    console.log("    - Select the division that offers the most information gain for each variable.")
+    console.log("    - Select the division that offers the most information gain among the best of each variable.")
+    console.log("    - For each son of the division add the node to the tree and go to step 1 with the filtered dataset.")
+    console.log("Step 4:")
+    console.log("    - This branch is finished. The next one in preorder will be evaluated\n\n")
+    console.log("Step 5:")
+    console.log("    - Print results\n\n")
+    hline()
+    hline()
+    console.log("\n IMPORTANT!!\n\n")
+    console.log("    - The objective is to understand how decission trees work. The stopping condition is to have PERFECT LEAFES.")
+    console.log("      If \"data\" is not perfectly classifiable, the code WILL NOT FINISH!!\n\n")
+    console.log("    - It is important to understand that the code flow is recursive,")
+    console.log("      meaning the tree is traversed in preorder (first, the root node is visited, then the children from left to right).")
+    console.log("      So, when the information is categorized in step 1, this order will be followed. \n\n")
+    hline()
+    hline()
+    if (waiting){
+      invisible(readline(prompt = "Press [enter] to continue"))
+      console.log("")
     }
-    cat("\n")
+  }
+
+  tree_strctr <- list(list(0))
+  result <- aux_decision_tree(data,classy, m, method, tree_strctr, id = 0, id_f = 0, h = 0, details, waiting)
+  result <- result[2:length(result)]
+
+  if(details){
+    hline()
+    console.log("\nStep 5:")
+    console.log("This is the structure of the decission tree:")
+  }
+
+  for (i in 1:length(result)){
+    console.log(paste("Height", i ,"has", length(result[[i]]),"sons, divided by", result[[i]][[1]][[5]],":\n\n"))
+    for (j in 1:length(result[[i]])){
+      console.log(paste("Son", result[[i]][[j]][[2]] ,"(Whose father node is", result[[i]][[j]][[3]], ") filters by \"", result[[i]][[j]][[6]], "\". It contains:\n"))
+      print(result[[i]][[j]][[1]])
+      console.log("")
+    }
+    console.log("")
   }
 }
 
-aux_decision_tree <- function (data, classy, m, method, tree_strctr, id, id_f, h){
+aux_decision_tree <- function (data, classy, m, method, tree_strctr, id, id_f, h, details, waiting){
   if (length(unique(data[, classy])) < 2){
+    if (details){
+      console.log("\nSteps 1 and 4:")
+      console.log("Data is classified.")
+    }
     return (tree_strctr)
   }
-  #print(data)
+
+  if (details){
+    console.log("\nStep 0:")
+    console.log("\nData:")
+    print(data)
+    if (waiting){
+      invisible(readline(prompt = "Press [enter] to continue"))
+      console.log("")
+    }
+  }
+
+  if (details){
+    hline()
+    console.log("\nSteps 1 and 2:")
+  }
   candidates <- mapply(
     function (n, name){
       df <- all_combs(unique(n),m)
       df <- gain_method(df, data, classy, method, name)
       df$classifier <- name
-      #print(df)
+      if (details){
+        console.log(paste("Combinations for", name))
+        print(df)
+        console.log("")
+      }
       m <- which(df$Gain == max(df$Gain))
       indice_fila_max_dashes <- which.min(sapply(df[m, ], function(column) sum(column == "---")))
       max_value <- df[m, ][indice_fila_max_dashes, ]
@@ -69,12 +154,32 @@ aux_decision_tree <- function (data, classy, m, method, tree_strctr, id, id_f, h
     SIMPLIFY = TRUE,
     USE.NAMES = FALSE
   )
+  if (details){
+    if (waiting){
+      invisible(readline(prompt = "Press [enter] to continue"))
+      console.log("")
+    }
+  }
 
   candidates <- t(data.frame(candidates))
   colnames(candidates) <- c("Sons", "Gain", "Classifier")
   max_gain <- list(candidates[which.max(candidates[, "Gain"]), ])
-  #print(candidates)
-  #print(max_gain)
+
+  if(details){
+    hline()
+    console.log("\nStep 3:")
+    console.log("List of best candidates (1 for each variable):")
+    print(candidates)
+    console.log("\nThe division with the most information gain is chosen:")
+    console.log(paste("    - Classifier =",max_gain[[1]][[3]][1]))
+    console.log(paste("    - Information gain =",round(max_gain[[1]][[2]][1],3)))
+    console.log("    - Sons =")
+    print(unlist((max_gain[[1]][[1]])))
+    if (waiting){
+      invisible(readline(prompt = "Press [enter] to continue"))
+      console.log("")
+    }
+  }
 
   h <- h + 1
   if (length(tree_strctr)-1 < h){
@@ -88,7 +193,7 @@ aux_decision_tree <- function (data, classy, m, method, tree_strctr, id, id_f, h
     tree_strctr[[1]][[1]]<- tree_strctr[[1]][[1]]+1
     tree_strctr[[h+1]] <- append(tree_strctr[[h+1]], list(list(df, tree_strctr[[1]][[1]], id_f, h, max_gain[[1]][[3]],max_gain[[1]][[1]][[i]],  max_gain[[1]][[2]])))
 
-    tree_strctr <- aux_decision_tree(df, classy, m, method, tree_strctr, tree_strctr[[1]][[1]], tree_strctr[[1]][[1]], h)
+    tree_strctr <- aux_decision_tree(df, classy, m, method, tree_strctr, tree_strctr[[1]][[1]], tree_strctr[[1]][[1]], h, details, waiting)
   }
   return (tree_strctr)
 }
@@ -170,18 +275,6 @@ error <- function(n, data, classy, name){
   return(ganancia)
 }
 
-
-#'@title comb
-#'@description Performes all possible combinations.
-#'
-#'@param v a
-#'@param vp b
-#'@param k c
-#'@param combinations d
-#'
-#'@return Value of the new classified example.
-#'@importFrom utils combn
-#'@keywords knn, supervised classification, K-Nearest Neighbors, distance.
 comb <- function(v, vp, k, combinations){
   if (k > 1){
     if (length(vp) == 0){

@@ -4,7 +4,7 @@
 \alias{polynomial_regression}
 \title{Multivariate Polynomial Regression}
 \usage{
-polynomial_regression(data, degree, details)
+polynomial_regression(data, degree, details = FALSE, waiting = TRUE)
 }
 \arguments{
 \item{data}{x*y data frame with already classified observations. Each column
@@ -15,16 +15,27 @@ represents the classification value (dependent variable). Each row is a differen
 
 \item{details}{Boolean value. If it is set to "TRUE" multiple clarifications
 and explanations are printed along the code}
+
+\item{waiting}{If TRUE while \code{details} = TRUE. The code will stop in each
+"block" of code and wait for the user to press "enter" to continue.}
 }
 \value{
-vector with 2 values (If covariance = 0 the return vector will be empty):
-* "R^2": Value that represents how well the regression line fits the given
-values.
-* "f(x)": Regression line equation.
+nothing
 }
 \description{
-This function calculates and plots the linear regression of a
-given set of values. Being all of them independent values but one, that is the dependent value
+Calculates and plots the polynomial regression of a given set of values.
+Being all of them independent values but one, which is the dependent value.
+It provides (if asked) information about the process and intermediate values used to calculate the line equation.
+The approximation depends entirely in the \code{degree} of the equations.
+}
+\examples{
+# example code
+polynomial_regression(db1rl,4, TRUE, FALSE)
+polynomial_regression(db1rl,6)
+
+}
+\author{
+Víctor Amador Padilla, \email{victor.amador@edu.uah.es}
 }
 \keyword{classification,}
 \keyword{gain}

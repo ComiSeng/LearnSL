@@ -1,18 +1,22 @@
 #' @title Multivariate Linear Regression
 #'
-#' @description This function calculates and plots the linear regression of a
-#' given set of values. Beind all of them independent values but one, that is the dependent value
+#' @description Calculates and plots the linear regression of a given set of values.
+#' Being all of them independent values but one, which is the dependent value.
+#' It provides information about the process and intermediate values used to calculate the line equation.
 #'
 #' @param data x*y data frame with already classified observations. Each column
 #' represents a parameter of the values (independent variable). The last column
 #' represents the classification value (dependent variable). Each row is a different observation.
-#' @param details boolean value. If it is set to "TRUE" multiple clarifications
+#' @param details Boolean value. If it is set to "TRUE" multiple clarifications
 #' and explanations are printed along the code
+#' @param waiting If TRUE while \code{details} = TRUE. The code will stop in each
+#' "block" of code and wait for the user to press "enter" to continue.
 #'
-#' @return vector with 2 values (If covariance = 0 the return vector will be empty):
-#' * "R^2": Value that represents how well the regression line fits the given
-#' values.
-#' * "f(x)": Regression line equation.
+#' @return nothing
+#'
+#' @examples
+#' # example code
+#' multivariate_linear_regression(db1rl)
 #'
 #' @keywords linear regression, supervised classification, learning, information
 #' gain
@@ -22,26 +26,31 @@
 #' @importFrom utils combn
 #' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}
 #' @export
-multivariate_linear_regression <- function(data, details, waiting) {
+multivariate_linear_regression <- function(data, details = FALSE, waiting = TRUE) {
 
-  console.log("\nEXPLANATION (for each independent variable)")
-  hline()
-  hline()
-  console.log("\nStep 1:")
-  console.log("    • Calculate mean of the dependent and independet variables.")
-  console.log("    • Calculate covariance and the variance of the dependent variable.")
-  console.log("      If covariance = 0, print error message.")
-  console.log("Step 2:")
-  console.log("    • Calculate the intercept and the slope of the equation.")
-  console.log("Step 3:")
-  console.log("    • Calculate the sum of squared residuals and the sum of squared deviations")
-  console.log("      of the independent variable.")
-  console.log("    • Calculate the coefficient of determination.")
-  console.log("Step 4:")
-  console.log("    • Plot the line equation\n")
-  hline()
-  hline()
-
+  if(details){
+    console.log("\nEXPLANATION (for each independent variable)")
+    hline()
+    hline()
+    console.log("\nStep 1:")
+    console.log("    - Calculate mean of the dependent and independet variables.")
+    console.log("    - Calculate covariance and the variance of the dependent variable.")
+    console.log("      If covariance = 0, print error message.")
+    console.log("Step 2:")
+    console.log("    - Calculate the intercept and the slope of the equation.")
+    console.log("Step 3:")
+    console.log("    - Calculate the sum of squared residuals and the sum of squared deviations")
+    console.log("      of the independent variable.")
+    console.log("    - Calculate the coefficient of determination.")
+    console.log("Step 4:")
+    console.log("    - Plot the line equation\n")
+    if (waiting) {
+      invisible(readline(prompt = "Press [enter] to continue"))
+      console.log("")
+    }
+    hline()
+    hline()
+  }
   par(mfrow = c(1, 1))
   num_columns <- ncol(data)
 
@@ -81,9 +90,9 @@ multivariate_linear_regression <- function(data, details, waiting) {
       hline()
       console.log("\nStep 1:")
       console.log(paste(colnames(data)[i],":"))
-      console.log(paste("     • Mean =", round(mean_x,3)))
-      console.log(paste("     • Covariance =", round(covar,3)))
-      console.log(paste("     • Variance =",round(var_x,3), "\n\n"))
+      console.log(paste("     - Mean =", round(mean_x,3)))
+      console.log(paste("     - Covariance =", round(covar,3)))
+      console.log(paste("     - Variance =",round(var_x,3), "\n\n"))
       if (waiting) {
         invisible(readline(prompt = "Press [enter] to continue"))
         console.log("")
@@ -103,10 +112,10 @@ multivariate_linear_regression <- function(data, details, waiting) {
         hline()
         console.log("\nSteps 2 and 3")
         console.log(paste(colnames(data)[i],":"))
-        console.log(paste("     • Intercept (a) =", round(a,3)))
-        console.log(paste("     • Slope (b) =", round(b,3)))
-        console.log(paste("     • Sum of squared residuals (ssr) =", round(ssr,3)))
-        console.log(paste("     • Sum of squared deviations of y (ssy) =", round(ssy,3)))
+        console.log(paste("     - Intercept (a) =", round(a,3)))
+        console.log(paste("     - Slope (b) =", round(b,3)))
+        console.log(paste("     - Sum of squared residuals (ssr) =", round(ssr,3)))
+        console.log(paste("     - Sum of squared deviations of y (ssy) =", round(ssy,3)))
         console.log(paste("They are used to calculate: Coefficient of determination (r^2) =", round(rcua,3), "\n\n"))
         console.log("")
         if (waiting){

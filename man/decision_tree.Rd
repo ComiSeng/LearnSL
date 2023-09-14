@@ -4,7 +4,14 @@
 \alias{decision_tree}
 \title{Decision Tree}
 \usage{
-decision_tree(data, classy, m, method = "entropy")
+decision_tree(
+  data,
+  classy,
+  m,
+  method = "entropy",
+  details = FALSE,
+  waiting = TRUE
+)
 }
 \arguments{
 \item{data}{A data frame with already classified observations. Each column
@@ -22,28 +29,49 @@ the set of rules obtained will be calculated according to this.}
 
 \item{method}{The definition of Gain. It must be one of
 \code{"Entropy"}, \code{"Gini"}or \code{"Error"}.}
+
+\item{details}{Boolean value. If it is set to "TRUE" multiple clarifications
+and explanations are printed along the code}
+
+\item{waiting}{If TRUE while \code{details} = TRUE. The code will stop in each
+"block" of code and wait for the user to press "enter" to continue.}
 }
 \value{
-data frame with a list of steps used to classify the data with this
-columns:
-Classifier  Value   Classified
+nothing
 }
 \description{
-This function creates a set of rules needed to classify data,
+This function creates a decision tree based of an example dataset,
 calculating the best classifier possible in each step. Only creates perfect
 divisions, this means, if the rule doesn't create a classified group, it is
-not considered.
+not considered. It is specifically designed for categorical values. Continues values
+are not recommended as they will be treated as categorical ones.
 }
 \details{
-Available gain information methods are:
+If \code{data} is not perfectly classifiable, the code will not finish.
+
+Available information gain methods are:
 
 \describe{
- * \emph{Entropy}: The formula to calculate the information gain
- works as follows: \deqn{p = -\sum{fi p\sub i * \log2 p\sub i}}
+\itemize{
+\item \emph{Entropy}: The formula to calculate the entropy
+works as follows: \deqn{p_{i} = -\sum{f_{i} p_{i} \cdot \log2 p_{i}}}
+\item \emph{Gini}: The formula to calculate gini
+works as follows: \deqn{p_{i} = 1 -\sum{f_{i} p_{i}^{2}}}
+\item \emph{Error}: The formula to calculate error
+works as follows: \deqn{p_{i} = 1 -\max{(f_{i} p_{i}})}
 }
+Once the impurity is calculated, the information gain is calculated as follows:
+\deqn{IG = I_{father} - \sum{\frac{count(sonvalues)}{count(fathervalues)} \cdot I_{son}}}
+}
+}
+\examples{
+# example code
+decision_tree(db3, "VehicleType", 5, "entropy", details = TRUE, waiting = FALSE)
+decision_tree(db2, "VehicleType", 4, "gini")
+
 }
 \author{
-Víctor Amador Padilla
+Víctor Amador Padilla, \email{victor.amador@edu.uah.es}
 }
 \keyword{classification,}
 \keyword{decision}

@@ -4,13 +4,24 @@
 \alias{knn}
 \title{K-Nearest Neighbors}
 \usage{
-knn(data, p1, d_method = "euclidean", k, p = 3)
+knn(
+  data,
+  ClassLabel,
+  p1,
+  d_method = "euclidean",
+  k,
+  p = 3,
+  details = FALSE,
+  waiting = TRUE
+)
 }
 \arguments{
 \item{data}{Data frame with already classified observations. Each
 column represents a parameter of the values. The last column contains the
 output, this means, the expected output when the other column values are
 inputs. Each row is a different observation.}
+
+\item{ClassLabel}{String containing the name of the column of the classes we want to classify}
 
 \item{p1}{Vector containing the parameters of the new value that we want to
 clasify.}
@@ -27,12 +38,29 @@ the new value ("p1").}
 
 \item{p}{Exponent used in the \code{Minkowski distance}. 3 by default,
 otherwise if specified.}
+
+\item{details}{Boolean value. If it is set to "TRUE" multiple clarifications
+and explanations are printed along the code}
+
+\item{waiting}{If TRUE while \code{details} = TRUE. The code will stop in each
+"block" of code and wait for the user to press "enter" to continue.}
 }
 \value{
 Value of the new classified example.
 }
 \description{
 This function applies knn algorith to clasify data.
+}
+\examples{
+# example code
+knn(db_flowers,"ClassLabel", c(4.7, 1.2, 5.3, 2.1), "chebyshev", 4)
+knn(db_flowers,"ClassLabel", c(4.7, 1.5, 5.3, 2.1), "chebyshev", 5)
+knn(db_flowers,"ClassLabel", c(6.7, 1.5, 5.3, 2.1), "Euclidean", 2, TRUE, FALSE)
+knn(db_per_or,"y", c(1,1,1), "Hamming", 3, TRUE, TRUE)
+
+}
+\author{
+Víctor Amador Padilla, \email{victor.amador@edu.uah.es}
 }
 \keyword{K-Nearest}
 \keyword{Neighbors,}

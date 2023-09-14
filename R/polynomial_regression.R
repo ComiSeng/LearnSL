@@ -1,7 +1,9 @@
 #' @title Multivariate Polynomial Regression
 #'
-#' @description This function calculates and plots the linear regression of a
-#' given set of values. Being all of them independent values but one, that is the dependent value
+#' @description Calculates and plots the polynomial regression of a given set of values.
+#' Being all of them independent values but one, which is the dependent value.
+#' It provides (if asked) information about the process and intermediate values used to calculate the line equation.
+#' The approximation depends entirely in the \code{degree} of the equations.
 #'
 #' @param data x*y data frame with already classified observations. Each column
 #' represents a parameter of the values (independent variable). The last column
@@ -9,11 +11,15 @@
 #' @param degree Degree of the equations approximation.
 #' @param details Boolean value. If it is set to "TRUE" multiple clarifications
 #' and explanations are printed along the code
+#' @param waiting If TRUE while \code{details} = TRUE. The code will stop in each
+#' "block" of code and wait for the user to press "enter" to continue.
 #'
-#' @return vector with 2 values (If covariance = 0 the return vector will be empty):
-#' * "R^2": Value that represents how well the regression line fits the given
-#' values.
-#' * "f(x)": Regression line equation.
+#' @return nothing
+#'
+#' @examples
+#' # example code
+#' polynomial_regression(db1rl,4, TRUE, FALSE)
+#' polynomial_regression(db1rl,6)
 #'
 #' @keywords linear regression, supervised classification, learning, information
 #' gain
@@ -22,7 +28,26 @@
 #' @importFrom graphics lines
 #' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}
 #' @export
-polynomial_regression <- function(data, degree, details, waiting) {
+polynomial_regression <- function(data, degree, details = FALSE, waiting = TRUE) {
+
+  if (details) {
+    console.log("\nEXPLANATION (for each independent variable)")
+    hline()
+    hline()
+    console.log("\nStep 1:")
+    console.log("    - Create an empty plot with the appropiate limits.")
+    console.log("Step 2:")
+    console.log("    - Aproximate an equation line that approximates the given values.")
+    console.log("      using the lm() function. It employs the least squared error method.")
+    console.log("Step 3:")
+    console.log("    - Plot the line and the legend.")
+    if (waiting) {
+      invisible(readline(prompt = "Press [enter] to continue"))
+      console.log("")
+    }
+    hline()
+    hline()
+  }
   par(mfrow = c(1, 1))
 
   num_columns <- ncol(data)
@@ -34,18 +59,22 @@ polynomial_regression <- function(data, degree, details, waiting) {
        ylab = "Variables")
 
   # Create an empty plot
-  if (details){
-    cat("An empty plot is made with appropiate limits\n")
-    if (waiting){
+  if (details) {
+    console.log("\nStep 1:")
+    console.log("\nAn empty plot is created with appropiate limits\n\n")
+    if (waiting) {
       invisible(readline(prompt = "Press [enter] to continue"))
       console.log("")
     }
+    console.log("The aproximations of the following equations to the provided values")
+    console.log("are done adjusting the coefficients of the line to make it the best-fit possible.\n\n")
   }
   # Initialize empty vectors for legends
   legend_labels <- character((num_columns - 1))
   legend_colors <- integer((num_columns - 1))
 
-  console.log("The aproximations of the following equations to the provided values are done adjusting the coefficients of the line to make it the best-fit possible.\n")
+
+
   # Iterate through each column (except the last one) as the independent variable
   for (i in 1:(num_columns - 1)) {
     independent_var <- data[, i]
@@ -83,8 +112,10 @@ polynomial_regression <- function(data, degree, details, waiting) {
     legend("topleft", legend = legend_labels, col = legend_colors,
            pch = 1, lty = 1, bty = 'n', xjust = 1, cex = 0.8)
     if (details){
-      console.log(paste("The Equation ( degree",degree,") aproximation to the"
-                      ,colnames(data)[i],"values is:",equation,"\n"))
+      hline()
+      console.log("Steps 2 and 3:")
+      console.log(paste("Equation ( degree",degree,") aproximation for"
+                      ,colnames(data)[i],"--> ",equation,"\n\n"))
       if (i != num_columns - 1){
         if (waiting){
           invisible(readline(prompt = "Press [enter] to continue"))
