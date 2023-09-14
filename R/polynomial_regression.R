@@ -21,9 +21,6 @@
 #' polynomial_regression(db1rl,4, TRUE, FALSE)
 #' polynomial_regression(db1rl,6)
 #'
-#' @keywords linear regression, supervised classification, learning, information
-#' gain
-#'
 #' @importFrom stats coef lm predict
 #' @importFrom graphics lines
 #' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}

@@ -25,11 +25,11 @@
 #' @details Functioning:
 #'
 #' \describe{
-#'  * \emph{Step 1}: Generate a random weight for each independent variable.
-#'  * \emph{Step 2}: Check if the weights classify correctly. If they do, go to step 4
-#'  * \emph{Step 3}: Adjust weights based on the error between the expected output and the real output.
-#'  If max_iter is reached go to step 4. If not, go to step 2.
-#'  * \emph{Step 4}: Return the weights and use them to classify the new value
+#'  \item{\emph{Step 1}}{Generate a random weight for each independent variable.}
+#'  \item{\emph{Step 2}}{Check if the weights classify correctly. If they do, go to step 4}
+#'  \item{\emph{Step 3}}{Adjust weights based on the error between the expected output and the real output.
+#'  If max_iter is reached go to step 4. If not, go to step 2.}
+#'  \item{\emph{Step 4}}{Return the weights and use them to classify the new value}
 #' }
 #'
 #' @examples
@@ -37,7 +37,6 @@
 #' perceptron(db_per_or, c(1, 1, 1), "gelu", 1000, 0.1)
 #' perceptron(db_per_and, c(0,0,1), "swish", 1000, 0.1, TRUE, FALSE)
 #'
-#' @keywords perceptron, neural networks, supervised learning, activation function
 #' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}
 #' @export
 perceptron <- function(training_data, to_clasify, activation_method, max_iter, learning_rate, details = FALSE, waiting = TRUE){

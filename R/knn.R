@@ -30,10 +30,8 @@
 #' # example code
 #' knn(db_flowers,"ClassLabel", c(4.7, 1.2, 5.3, 2.1), "chebyshev", 4)
 #' knn(db_flowers,"ClassLabel", c(4.7, 1.5, 5.3, 2.1), "chebyshev", 5)
-#' knn(db_flowers,"ClassLabel", c(6.7, 1.5, 5.3, 2.1), "Euclidean", 2, TRUE, FALSE)
-#' knn(db_per_or,"y", c(1,1,1), "Hamming", 3, TRUE, TRUE)
-#'
-#' @keywords knn, supervised classification, K-Nearest Neighbors, distance.
+#' knn(db_flowers,"ClassLabel", c(6.7, 1.5, 5.3, 2.1), "Euclidean", 2, details = TRUE, waiting = FALSE)
+#' knn(db_per_or,"y", c(1,1,1), "Hamming", 3, details = TRUE, waiting = FALSE)
 #'
 #' @importFrom graphics pairs
 #' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}

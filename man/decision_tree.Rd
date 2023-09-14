@@ -52,17 +52,15 @@ If \code{data} is not perfectly classifiable, the code will not finish.
 Available information gain methods are:
 
 \describe{
-\itemize{
-\item \emph{Entropy}: The formula to calculate the entropy
-works as follows: \deqn{p_{i} = -\sum{f_{i} p_{i} \cdot \log2 p_{i}}}
-\item \emph{Gini}: The formula to calculate gini
-works as follows: \deqn{p_{i} = 1 -\sum{f_{i} p_{i}^{2}}}
-\item \emph{Error}: The formula to calculate error
-works as follows: \deqn{p_{i} = 1 -\max{(f_{i} p_{i}})}
+\item{\emph{Entropy}}{The formula to calculate the entropy
+works as follows:\eqn{p_{i} = -\sum{f_{i} p_{i} \cdot \log2 p_{i}}}}
+\item{\emph{Gini}}{The formula to calculate gini
+works as follows:\eqn{p_{i} = 1 -\sum{f_{i} p_{i}^{2}}}}
+\item{\emph{Error}}{The formula to calculate error
+works as follows:\eqn{p_{i} = 1 -\max{(f_{i} p_{i}})}}
 }
 Once the impurity is calculated, the information gain is calculated as follows:
 \deqn{IG = I_{father} - \sum{\frac{count(sonvalues)}{count(fathervalues)} \cdot I_{son}}}
-}
 }
 \examples{
 # example code
@@ -73,10 +71,3 @@ decision_tree(db2, "VehicleType", 4, "gini")
 \author{
 Víctor Amador Padilla, \email{victor.amador@edu.uah.es}
 }
-\keyword{classification,}
-\keyword{decision}
-\keyword{gain}
-\keyword{information}
-\keyword{learning,}
-\keyword{rules,}
-\keyword{supervised}

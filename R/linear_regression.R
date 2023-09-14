@@ -18,9 +18,6 @@
 #' # example code
 #' multivariate_linear_regression(db1rl)
 #'
-#' @keywords linear regression, supervised classification, learning, information
-#' gain
-#'
 #' @importFrom graphics abline legend par points
 #' @importFrom stats cov var runif
 #' @importFrom utils combn

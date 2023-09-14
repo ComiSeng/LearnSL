@@ -34,5 +34,5 @@ This is yet another example of an implemented classification algorithm, showing 
 
 ```{r example_2}
 library(LearnSL)
-perceptron(db_per_and, c(0,0,1), "swish", 1000, 0.1, TRUE, FALSE)
+knn(db_flowers,"ClassLabel", c(6.7, 1.5, 5.3, 2.1), "Euclidean", 2, details = TRUE, waiting = FALSE)
 ```

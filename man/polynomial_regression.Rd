@@ -37,10 +37,3 @@ polynomial_regression(db1rl,6)
 \author{
 Víctor Amador Padilla, \email{victor.amador@edu.uah.es}
 }
-\keyword{classification,}
-\keyword{gain}
-\keyword{information}
-\keyword{learning,}
-\keyword{linear}
-\keyword{regression,}
-\keyword{supervised}

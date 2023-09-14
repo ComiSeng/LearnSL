@@ -30,12 +30,12 @@
 #' @details Available information gain methods are:
 #'
 #' \describe{
-#'  * \emph{Entropy}: The formula to calculate the entropy
-#'  works as follows: \deqn{p_{i} = -\sum{f_{i} p_{i} \cdot \log2 p_{i}}}
-#'  * \emph{Gini}: The formula to calculate gini
-#'  works as follows: \deqn{p_{i} = 1 -\sum{f_{i} p_{i}^{2}}}
-#'  * \emph{Error}: The formula to calculate error
-#'  works as follows: \deqn{p_{i} = 1 -\max{(f_{i} p_{i}})}
+#'  \item{\emph{Entropy}}{The formula to calculate the entropy
+#'  works as follows:\eqn{p_{i} = -\sum{f_{i} p_{i} \cdot \log2 p_{i}}}}
+#'  \item{\emph{Gini}}{The formula to calculate gini
+#'  works as follows:\eqn{p_{i} = 1 -\sum{f_{i} p_{i}^{2}}}}
+#'  \item{\emph{Error}}{The formula to calculate error
+#'  works as follows:\eqn{p_{i} = 1 -\max{(f_{i} p_{i}})}}
 #' }
 #' Once the impurity is calculated, the information gain is calculated as follows:
 #' \deqn{IG = I_{father} - \sum{\frac{count(sonvalues)}{count(fathervalues)} \cdot I_{son}}}
@@ -45,7 +45,6 @@
 #' decision_tree(db3, "VehicleType", 5, "entropy", details = TRUE, waiting = FALSE)
 #' decision_tree(db2, "VehicleType", 4, "gini")
 #'
-#' @keywords decision rules, supervised classification, learning, information gain
 #' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}
 #' @export
 decision_tree <- function (data, classy, m, method = "entropy", details = FALSE, waiting = TRUE){

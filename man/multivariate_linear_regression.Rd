@@ -33,10 +33,3 @@ multivariate_linear_regression(db1rl)
 \author{
 Víctor Amador Padilla, \email{victor.amador@edu.uah.es}
 }
-\keyword{classification,}
-\keyword{gain}
-\keyword{information}
-\keyword{learning,}
-\keyword{linear}
-\keyword{regression,}
-\keyword{supervised}
