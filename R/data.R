@@ -1,4 +1,3 @@
-
 #' @title Test Database 1
 #'
 #' @format ## `db1rl`
@@ -54,3 +53,10 @@
 #' It has information about vehicles. Similar to db2 but a little bit more complex.
 #'
 "db3"
+
+#' @title Test Database 8
+#'
+#' @format ## `db_tree_struct`
+#' Decision tree structure. output of the decision_tree() function "decision_tree(db2, "VehicleType", 4, "gini")"
+#'
+"db_tree_struct"

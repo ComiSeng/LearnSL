@@ -37,7 +37,10 @@ and explanations are printed along the code}
 "block" of code and wait for the user to press "enter" to continue.}
 }
 \value{
-nothing
+Structure of the tree. List with a list per tree level. Each of these
+contains a list per level node, each of these contains a list with the node's
+filtered data, the node's id, the father's node id, the height that node is at,
+the variable it filters by, the value that variable is filtered by and the information gain of the division
 }
 \description{
 This function creates a decision tree based of an example dataset,

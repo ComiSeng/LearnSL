@@ -7,7 +7,7 @@
 #' @param training_data Data frame with already classified observations. Each
 #' column represents a parameter of the values. The last column contains the
 #' output, this means, the expected output when the other column values are
-#' inputs. Each row is a different observation. It works as training data
+#' inputs. Each row is a different observation. It works as training data.
 #' @param to_clasify Vector containing the parameters of the new value that we want to
 #' classify.
 #' @param activation_method Activation function to be used. It must be one of
@@ -20,7 +20,7 @@
 #' @param waiting If TRUE while \code{details} = TRUE. The code will stop in each
 #' "block" of code and wait for the user to press "enter" to continue.
 #'
-#' @return numeric value with the predicted class of the new value.
+#' @return List with the weights of the inputs.
 #'
 #' @details Functioning:
 #'
@@ -60,17 +60,16 @@ perceptron <- function(training_data, to_clasify, activation_method, max_iter, l
       console.log("")
     }
   }
-  weigths <- per_training( training_data, activation_method, max_iter, learning_rate, details, waiting)
+  weigths <- per_training(training_data, activation_method, max_iter, learning_rate, details, waiting)
   clasificacion <- as.numeric(act_method(activation_method,sum(weigths * to_clasify)) > 0.5)
   if (details){
     hline()
     console.log("\nStep 4:\n")
-  }
-  console.log(paste("Predicted value:", clasificacion, "\n"))
-  if (details){
+    console.log(paste("Predicted value:", clasificacion, "\n"))
     console.log("Final weigths:")
     print(weigths)
   }
+  return(weigths)
 }
 
 #' @importFrom stats runif
@@ -133,7 +132,45 @@ per_training <- function(training_data, activation_method, max_iter, learning_ra
   return(env$weigths)
 }
 
-
+#' @title Activation Function
+#'
+#' @description Upon a received input, calculates the output based on the
+#' selected activation function
+#'
+#' @param x Input value to be used in the activation function.
+#' @param method Activation function to be used. It must be one of
+#' \code{"step"}, \code{"sine"}, \code{"tangent"}, \code{"linear"}, \code{"relu"},
+#' \code{"gelu"} or \code{"swish"}.
+#'
+#' @return List with the weights of the inputs.
+#'
+#' @details Formulae used:
+#'
+#' \describe{
+#'  \item{\emph{step}}{
+#'    \deqn{f(x) = \begin{cases}
+#'      0 & \text{if } x < \text{threshold} \\
+#'      1 & \text{if } x \geq \text{threshold}
+#'    \end{cases}}}
+#'  \item{\emph{sine}}{\deqn{f(x) = \sinh(x)}}
+#'  \item{\emph{tangent}}{\deqn{f(x) = \tanh(x)}}
+#'  \item{\emph{linear}}{\deqn{x}}
+#'  \item{\emph{relu}}{
+#'    \deqn{f(x) = \begin{cases}
+#'      x & \text{if } x > 0 \\
+#'      0 & \text{if } x \leq 0
+#'    \end{cases}}}
+#'  \item{\emph{gelu}}{\deqn{f(x) = \frac{1}{2} \cdot x \cdot \left(1 + \tanh\left(\sqrt{\frac{2}{\pi}} \cdot (x + 0.044715 \cdot x^3)\right)\right)}}
+#'  \item{\emph{swish}}{\deqn{f(x) = \frac{x}{1 + e^{-x}}}}
+#' }
+#'
+#' @examples
+#' # example code
+#' act_method("step", 0.3)
+#' act_method("gelu", 0.7)
+#'
+#' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}
+#' @export
 act_method <- function(method, x){
   switch (tolower(method),
           "step"     = as.numeric(x > 0.5),

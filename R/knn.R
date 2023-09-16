@@ -37,6 +37,31 @@
 #' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}
 #' @export
 knn <- function(data,ClassLabel ,p1, d_method = "euclidean", k, p = 3, details = FALSE, waiting = TRUE) {
+  dist <- apply(
+    data[, 1:(length(data) - 1)],
+    1,
+    distance_method,
+    p1 = p1,
+    d_method = d_method,
+    p = p
+  )
+
+  neighbors <- sort(dist, index.return = TRUE)$ix[1:k] # k closest values position
+  tags <- data[neighbors, length(data)] # class names in k values
+  clas <- table(tags)
+
+  my_string <- "New_Value"
+  my_list <- list()
+  my_list<- c(my_list, p1)
+  my_list <- c(my_list, my_string)
+  data <- rbind(data, my_list)
+
+  # Extract the features (columns except the last one, which is the class)
+  features <- data[, 1:(length(data) - 1)]
+  num_dimensions <- ncol(features)
+
+  prediction <- names(clas)[clas == max(clas)][1] #most repeated class
+
   if(details){
     console.log("\nEXPLANATION")
     hline()
@@ -55,16 +80,7 @@ knn <- function(data,ClassLabel ,p1, d_method = "euclidean", k, p = 3, details =
     }
     hline()
     hline()
-  }
-  dist <- apply(
-    data[, 1:(length(data) - 1)],
-    1,
-    distance_method,
-    p1 = p1,
-    d_method = d_method,
-    p = p
-  )
-  if(details){
+
     console.log("\nStep 1:")
     console.log("\nDistance from p1 to every other p.")
     print(dist)
@@ -72,12 +88,7 @@ knn <- function(data,ClassLabel ,p1, d_method = "euclidean", k, p = 3, details =
       invisible(readline(prompt = "Press [enter] to continue"))
       console.log("")
     }
-  }
-  neighbors <- sort(dist, index.return = TRUE)$ix[1:k] # k closest values position
 
-  tags <- data[neighbors, length(data)] # class names in k values
-
-  if(details){
     hline()
     console.log("\nStep 2:")
     console.log("\nThese are the first k values classes:")
@@ -86,29 +97,14 @@ knn <- function(data,ClassLabel ,p1, d_method = "euclidean", k, p = 3, details =
       invisible(readline(prompt = "Press [enter] to continue"))
       console.log("")
     }
-  }
 
-  my_string <- "New_Value"
-  my_list <- list()
-  my_list<- c(my_list, p1)
-  my_list <- c(my_list, my_string)
-  data <- rbind(data, my_list)
+    # Create a scatterplot matrix with different colors for each class
+    colors <- c("red", "blue", "green", "purple", "orange", "cyan", "magenta", "brown", "gray", "pink")
+    class_colors <- colors[match(data[[ClassLabel]], unique(data[[ClassLabel]]))]
 
-  # Extract the features (columns except the last one, which is the class)
-  features <- data[, 1:(length(data) - 1)]
-  num_dimensions <- ncol(features)
+    pairs(features, col = class_colors)
+    legend("topleft", legend = unique(data[[ClassLabel]]), fill = colors, cex = 0.7, xpd = TRUE, ncol = 1)
 
-  # Create a scatterplot matrix with different colors for each class
-  colors <- c("red", "blue", "green", "purple", "orange", "cyan", "magenta", "brown", "gray", "pink")
-  class_colors <- colors[match(data[[ClassLabel]], unique(data[[ClassLabel]]))]
-
-  pairs(features, col = class_colors)
-
-
-  legend("topleft", legend = unique(data[[ClassLabel]]), fill = colors, cex = 0.7, xpd = TRUE, ncol = 1)
-
-  clas <- table(tags)
-  if(details){
     hline()
     console.log("\nStep 3:")
     console.log("\nPlot values.")
@@ -116,14 +112,12 @@ knn <- function(data,ClassLabel ,p1, d_method = "euclidean", k, p = 3, details =
       invisible(readline(prompt = "Press [enter] to continue"))
       console.log("")
     }
-  }
-  prediction <- names(clas)[clas == max(clas)][1] #most repeated class
-  if(details){
+
     hline()
     console.log("\nStep 4:")
     console.log(paste("\nThe most represented class among the k closes neighbors is", prediction))
     console.log("therefore, that is the new value's predicted class.")
-  }else{console.log(paste("p1 =", prediction))}
+  }
   return (prediction)
 }
 

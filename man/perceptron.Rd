@@ -18,7 +18,7 @@ perceptron(
 \item{training_data}{Data frame with already classified observations. Each
 column represents a parameter of the values. The last column contains the
 output, this means, the expected output when the other column values are
-inputs. Each row is a different observation. It works as training data}
+inputs. Each row is a different observation. It works as training data.}
 
 \item{to_clasify}{Vector containing the parameters of the new value that we want to
 classify.}
@@ -38,7 +38,7 @@ and explanations are printed along the code}
 "block" of code and wait for the user to press "enter" to continue.}
 }
 \value{
-numeric value with the predicted class of the new value.
+List with the weights of the inputs.
 }
 \description{
 Binary classification algorithm that learns to separate

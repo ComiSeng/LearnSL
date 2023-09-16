@@ -20,7 +20,8 @@ and explanations are printed along the code}
 "block" of code and wait for the user to press "enter" to continue.}
 }
 \value{
-nothing
+List containing a list for each independent variable,
+each one contains the equation coefficients.
 }
 \description{
 Calculates and plots the polynomial regression of a given set of values.

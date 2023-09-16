@@ -12,7 +12,8 @@
 #' @param waiting If TRUE while \code{details} = TRUE. The code will stop in each
 #' "block" of code and wait for the user to press "enter" to continue.
 #'
-#' @return nothing
+#' @return List containing a list for each independent variable,
+#'  each one contains, the variable name, the intercept and the slope.
 #'
 #' @examples
 #' # example code
@@ -24,6 +25,11 @@
 #' @author Víctor Amador Padilla, \email{victor.amador@@edu.uah.es}
 #' @export
 multivariate_linear_regression <- function(data, details = FALSE, waiting = TRUE) {
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+
+
+  num_columns <- ncol(data)
 
   if(details){
     console.log("\nEXPLANATION (for each independent variable)")
@@ -47,18 +53,15 @@ multivariate_linear_regression <- function(data, details = FALSE, waiting = TRUE
     }
     hline()
     hline()
-  }
-  par(mfrow = c(1, 1))
-  num_columns <- ncol(data)
 
-  plot(1, type = "n", xlim = range(data[, num_columns]),
-       ylim = range(data[, 1:(num_columns - 1)]),
-       main = "Multivariate Linear Regression",
-       xlab = colnames(data)[num_columns],  # Use dependent variable as x-axis label
-       ylab = "Variables")  # Use "Variables" as y-axis label
-
-  if (details) {
+    par(mfrow = c(1, 1))
     console.log("\nAn empty plot is created with appropiate limits\n\n")
+    plot(1, type = "n", xlim = range(data[, num_columns]),
+         ylim = range(data[, 1:(num_columns - 1)]),
+         main = "Multivariate Linear Regression",
+         xlab = colnames(data)[num_columns],  # Use dependent variable as x-axis label
+         ylab = "Variables")  # Use "Variables" as y-axis label
+
     if (waiting) {
       invisible(readline(prompt = "Press [enter] to continue"))
       console.log("")
@@ -68,7 +71,9 @@ multivariate_linear_regression <- function(data, details = FALSE, waiting = TRUE
   # Initialize empty vectors for legends
   legend_labels <- character(num_columns - 1)
   legend_colors <- integer(num_columns - 1)
-  variable_names <- character(num_columns - 1)  # To store variable names
+  variable_names <- character(num_columns - 1)
+
+  reg_params <- list(num_columns - 1)
 
   dependent_var <- data[, num_columns]
   mean_y <- mean(dependent_var)
@@ -119,21 +124,20 @@ multivariate_linear_regression <- function(data, details = FALSE, waiting = TRUE
           invisible(readline(prompt = "Press [enter] to continue"))
           console.log("")
         }
-      }
-      # Plot the points and regression line for each column
-      points(dependent_var, independent_var, pch = 16, cex = 1, col = i)
-      abline(a, b, col = i, lty = i)
 
-      # Store legend labels, colors, and variable names
-      legend_labels[i] <- paste(" f(x) =", round(a, 3), "+", round(b, 3), "x")
-      legend_colors[i] <- i
-      variable_names[i] <- colnames(data)[i]
+        # Plot the points and regression line for each column
+        points(dependent_var, independent_var, pch = 16, cex = 1, col = i)
+        abline(a, b, col = i, lty = i)
 
-      legend_text <- paste(variable_names, ": ", legend_labels, sep = "")
-      legend("topleft", legend = legend_text, col = legend_colors,
-             pch = 1, lty = 1, bty = 'n', xjust = 1, cex = 0.8)
+        # Store legend labels, colors, and variable names
+        legend_labels[i] <- paste(" f(x) =", round(a, 3), "+", round(b, 3), "x")
+        legend_colors[i] <- i
+        variable_names[i] <- colnames(data)[i]
 
-      if (details){
+        legend_text <- paste(variable_names, ": ", legend_labels, sep = "")
+        legend("topleft", legend = legend_text, col = legend_colors,
+               pch = 1, lty = 1, bty = 'n', xjust = 1, cex = 0.8)
+
         hline()
         console.log("\nStep 4")
         console.log(paste(colnames(data)[i],":"))
@@ -145,9 +149,10 @@ multivariate_linear_regression <- function(data, details = FALSE, waiting = TRUE
           }
         }
       }
+      reg_params[[i]]<- list(var_name = colnames(data)[i], a = a ,b = b)
     } else {
-      cat("Covariance = 0 for column", i, "infinite slope, no line fits the given data.\n")
+      stop("Covariance = 0 for column ", i, " infinite slope, no line fits the given data.\n")
     }
   }
-  par(mfrow = c(1, 1))
+  return(reg_params)
 }
